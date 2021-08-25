@@ -1,6 +1,6 @@
-#Trabalho final na disciplina de algoritmos e programação do curso de ciências da computação UFFS.
+# Trabalho final na disciplina de algoritmos e programação do curso de ciências da computação UFFS.
 
-#Abaixo segue as instruções do trabalho.
+## Abaixo segue as instruções do trabalho.
 
 Você foi contratado(a) para criar um sistema que gerencie as operações de uma loja virtual utilizando a linguagem Python. Seu programa deve realizar as operações semelhantes a uma empresa de venda de produtos virtuais.
 

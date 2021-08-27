@@ -1,35 +1,37 @@
 carrinho = []
 execucao = 'sim'
-carrinhovalor = []
+carrinhoitem = []
 cpfs = list()
 opcao = 'sim'
 chega = ''
-limite = 1000
 usuarios = list()
 produtos = ['Controle naointendo', 'Xaina Bluemi note 10', 'Refrigerante de cola', 'Chocolate branco', 'Chocolate preto', 'Xícara espelhada', 'Fita led', 'Televisão LB - life is bad', 'Mouse heyzer', 'Travesseiro microfibra', 'Régua 30cm', 'Escova de dente', 'Cobertor', 'Geladeira frost free', 'Despertador', 'Arroz 1kg', 'Bolacha salgada', 'Feijão 1kg', 'Açucar 1kg', 'Achocolatado 500g']
 preco = [199.00, 899.00, 2.99, 2.99, 1.99, 15.50, 20, 1200, 300, 15.99, 5.90, 13.90, 89.90, 859.90, 49.90, 5.50, 2.99, 4.99, 12.99, 6.50]
 def cadastro():
+    class dadosuser():
+        email = input('Crie um email para o usuário \n')
+        senha = input('Crie uma senha para o usuário com exatamente 6 digitos\n')
+        nome = input('Informe o seu nome\n')
+        cpf = input('Informe o seu cpf, somente números.\n')
+        limite = 1000
+    dados = dadosuser()
     cpflist = []
     emailinvalido = 0
-    email = input('Crie um email para o usuário \n')
-    senha = input('Crie uma senha para o usuário com exatamente 6 digitos\n')
-    nome = input('Informe o seu nome\n')
-    cpf = input('Informe o seu cpf, somente números.\n')
     #Verificação de validação das entradas
-    for letra in email:
+    for letra in dados.email:
         if letra == '@':
             pass
         else:
             emailinvalido+=1 #Variável utilizada como contador de caracteres que não são um @.
-        if emailinvalido == len(email): #caso a variável tenha a mesma quantidade de digitos que a variável email, significa que o email não possui @
+        if emailinvalido == len(dados.email): #caso a variável tenha a mesma quantidade de digitos que a variável email, significa que o email não possui @
             return print('Email incorreto, é necessário que tenha um @.')
-    if len(senha) != 6:
+    if len(dados.senha) != 6:
         return print('Senha inválida. Deve ser constituída de 6 digitos.')
-    if nome.isalpha() == False: #A função isalpha() retorna true caso toda a string seja uma letra, caso contrário retorna falso.
+    if dados.nome.isalpha() == False: #A função isalpha() retorna true caso toda a string seja uma letra, caso contrário retorna falso.
         return print('Nome inválido. Apenas caracteres alfabéticos são permitidos')
-    for numero in cpf:
+    for numero in dados.cpf:
         cpflist.append(int(numero))
-    if len(cpf) < 11: #Verificação do CPF
+    if len(dados.cpf) < 11: #Verificação do CPF
         return print('CPF inválido, exatamente 11 números.')
     #Verificação se o primeiro dígito verificador está corretos, utiliziando o seguinte algoritmo de verificação http://www.macoratti.net/alg_cpf.htm
     digito1 = cpflist[0] * 10 + cpflist[1] * 9 + cpflist[2] * 8 + cpflist[3] * 7 + cpflist[4] * 6 + cpflist[5] * 5 + cpflist[6] * 4 + cpflist[7] * 3 + cpflist[8] * 2
@@ -60,29 +62,30 @@ def cadastro():
         else:
             return print('Dígito verificador está incorreto')
     #Verificando se os dados já estão cadastrados.
-    if cpf in cpfs:
+    if dados.cpf in cpfs:
         return print('CPF ja está cadastrado')
-    elif nome in usuarios:
+    elif dados.nome in usuarios:
         return print('Usuário ja está cadastrado')
     else:
-        cpfs.append(cpf)
-        usuarios.append(nome)
+        cpfs.append(dados.cpf)
+        usuarios.append(dados.nome)
         print('Usuário cadastrado com sucesso')
-        usuarioComSucesso = True
-        limite = 1000
-    return email, cpf, usuarioComSucesso, limite
-def compras(limite):
-    comprandoboolean = False
-    limiteover = False
+    return dadosuser
+def compras(email, cpf, limite):
     print('Olá, atualmente temos os seguintes produtos em estoque.')
     for prod in range(len(produtos)): #For para mostrar todos os produtos na tela.
         print(f'{prod}.{produtos[prod]}-R$ {preco[prod]}') 
     print('Para adicionar ao carrinho basta apenas digitar o número do item.')
     print('Caso queira para de comprar digite 0')
+    print('Caso queira pagar seu carrinho e liberar mais limite digite 100')
     while limite > 0:
         print(f'Você possui um limite de crédito de {limite}')
         comprando = int(input())
         if comprando == 0:
+            break
+        elif comprando == 100:
+            print(f'Um boleto no valor de {carrinhoTotal} foi gerado no CPF {cpf} e enviado para o email {email} e seu limite foi liberado')
+            limite = 1000
             break
         comprando = comprando - 1 #diminuindo 1 da escolha do usuário para que se encaixe no range da lista.
         try: #Caso o produto exista.
@@ -94,29 +97,29 @@ def compras(limite):
             limite = limite - preco[comprando]
             print(f'{produtos[comprando]} adicionado ao carrinho')
             carrinho.append(produtos[comprando])
-            carrinhovalor.append(preco[comprando])
+            carrinhoitem.append(preco[comprando])
         else:
             print('Limite indisponivel.')
-    for valoritem in carrinhovalor:
-        gasto = valoritem
-    return carrinho, carrinhovalor, gasto
-def mostrarCarrinho(carrinho, carrinhovalor, gasto):
-    print(f'O valor total do seu carrinho é {gasto}')
+        for valoritem in carrinhoitem:
+            carrinhoTotal = valoritem
+    return carrinho, carrinhoitem, carrinhoTotal
+def mostrarCarrinho(carrinho, carrinhoitem, carrinhoTotal):
+    print(f'O valor total do seu carrinho é {carrinhoTotal}')
     escolha = input('Deseja ver os itens que estão no seu carrinho?')
     escolha.lower()#Para que não haja erro na comparação, caso o usuário digite letras maiusculas.
     if escolha == 'sim':
         for item in carrinho:
-            print({item})
-    return gasto
-def pagamento(gasto, email, cpf):
-    if gasto != 0:
-        print(f'O valor do seu carrinho é {gasto}')
+            print(f'{item}: {carrinhoitem}')
+    return carrinhoTotal
+def pagamento(carrinhoTotal, email, cpf):
+    if carrinhoTotal != 0:
+        print(f'O valor do seu carrinho é {carrinhoTotal}')
         pagar = input('Deseja realizar o pagamento agora?')
         pagar.lower() #Para que não haja erro na comparação, caso o usuário digite letras maiusculas.
     else:
         return print('Você não possui produtos em seu carrinho.')
     if pagar == 'sim':
-        print(f'Um boleto no valor de {gasto} foi gerado no CPF {cpf} e enviado para o email {email} e seu limite foi liberado')
+        print(f'Um boleto no valor de {carrinhoTotal} foi gerado no CPF {cpf} e enviado para o email {email} e seu limite foi liberado')
 
 # !-=-=-=-=-=-=-=-=-=-=-=- Programa principal =-=-=-=-=-=-=-=-=-=-=-=-!
 
@@ -131,13 +134,13 @@ while execucao == 'sim':
         retornocadastro = cadastro() #execução da função e armazenamento do retorno.
     elif menu == '2':
          #Se o usuário possuir cadastro ativo ele chamará a função compras, caso contrário irá dar um aviso que não possui cadastro.
-        retornocompras = compras(retornocadastro[3]) #execução da função e armazenamento do retorno.
+        retornocompras = compras(retornocadastro.email, retornocadastro.cpf, retornocadastro.limite) #execução da função e armazenamento do retorno.
     elif menu == '3':
         try: retornomostrarCarrinho = mostrarCarrinho(retornocompras[0], retornocompras[1], retornocompras[2]) #execução da função e armazenamento do retorno.
         #Se o usuário possuir carrinho ativo ele chamará a função mostrarCarrinho, caso contrário irá dar um aviso que não possui carrinho.
         except: 
             print('Você não possui um carrinho.')
     elif menu == '4':
-            pagamento(retornocompras[2], retornocadastro[0], retornocadastro[1]) #Se o usuário possuir carrinho ativo ele chamará a função pagamento, caso contrário irá dar um aviso que não possui carrinho.
+            pagamento(retornocompras[2], retornocadastro.email, retornocadastro.cpf) #Se o usuário possuir carrinho ativo ele chamará a função pagamento, caso contrário irá dar um aviso que não possui carrinho.
 
-    execucao = input('Deseja realizar outra ação?')
+    execucao = input('Deseja realizar outra ação? \n')

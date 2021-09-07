@@ -84,7 +84,7 @@ def compras(email, cpf, limite):
         if comprando == 0:
             break
         elif comprando == 100:
-            print(f'Um boleto no valor de {carrinhoTotal} foi gerado no CPF {cpf} e enviado para o email {email} e seu limite foi liberado')
+            print(f'Um boleto no valor foi gerado no seu CPF {cpf} e enviado para o email {email} e seu limite foi liberado')
             limite = 1000
             break
         comprando = comprando - 1 #diminuindo 1 da escolha do usuário para que se encaixe no range da lista.
@@ -100,16 +100,17 @@ def compras(email, cpf, limite):
             carrinhoitem.append(preco[comprando])
         else:
             print('Limite indisponivel.')
-        for valoritem in carrinhoitem:
-            carrinhoTotal = valoritem
-    return carrinho, carrinhoitem, carrinhoTotal
-def mostrarCarrinho(carrinho, carrinhoitem, carrinhoTotal):
+    return carrinho, carrinhoitem
+def mostrarCarrinho(carrinho, carrinhoitem):
+    carrinhoTotal = 0
+    for valoritem in range(len(carrinhoitem)):
+        carrinhoTotal += carrinhoitem[valoritem]
     print(f'O valor total do seu carrinho é {carrinhoTotal}')
     escolha = input('Deseja ver os itens que estão no seu carrinho?')
     escolha.lower()#Para que não haja erro na comparação, caso o usuário digite letras maiusculas.
     if escolha == 'sim':
-        for item in carrinho:
-            print(f'{item}: {carrinhoitem}')
+        for item in range(len(carrinho)):
+            print(f'{carrinho[item]}: {carrinhoitem[item]}')
     return carrinhoTotal
 def pagamento(carrinhoTotal, email, cpf):
     if carrinhoTotal != 0:
@@ -134,13 +135,19 @@ while execucao == 'sim':
         retornocadastro = cadastro() #execução da função e armazenamento do retorno.
     elif menu == '2':
          #Se o usuário possuir cadastro ativo ele chamará a função compras, caso contrário irá dar um aviso que não possui cadastro.
-        retornocompras = compras(retornocadastro.email, retornocadastro.cpf, retornocadastro.limite) #execução da função e armazenamento do retorno.
+        try: retornocompras = compras(retornocadastro.email, retornocadastro.cpf, retornocadastro.limite) #execução da função e armazenamento do retorno.
+        except: print("Você não possui cadastro.")
     elif menu == '3':
-        try: retornomostrarCarrinho = mostrarCarrinho(retornocompras[0], retornocompras[1], retornocompras[2]) #execução da função e armazenamento do retorno.
+        try: retornomostrarCarrinho = mostrarCarrinho(retornocompras[0], retornocompras[1]) #execução da função e armazenamento do retorno.
         #Se o usuário possuir carrinho ativo ele chamará a função mostrarCarrinho, caso contrário irá dar um aviso que não possui carrinho.
         except: 
             print('Você não possui um carrinho.')
     elif menu == '4':
-            pagamento(retornocompras[2], retornocadastro.email, retornocadastro.cpf) #Se o usuário possuir carrinho ativo ele chamará a função pagamento, caso contrário irá dar um aviso que não possui carrinho.
-
+        retornomostrarCarrinho = mostrarCarrinho(retornocompras[0], retornocompras[1])
+        try:
+            pagamento(retornomostrarCarrinho, retornocadastro.email, retornocadastro.cpf) #Se o usuário possuir carrinho ativo ele chamará a função pagamento, caso contrário irá dar um aviso que não possui carrinho.
+        except:
+            print('Voce nao possui um carrinho.')
+    else:
+        print('Menu invalido, tente novamente.')
     execucao = input('Deseja realizar outra ação? \n')

@@ -1,12 +1,11 @@
-carrinho = []
-execucao = 'sim'
-carrinhoitem = []
-cpfs = list()
-opcao = 'sim'
-chega = ''
-usuarios = list()
-produtos = ['Controle naointendo', 'Xaina Bluemi note 10', 'Refrigerante de cola', 'Chocolate branco', 'Chocolate preto', 'Xícara espelhada', 'Fita led', 'Televisão LB - life is bad', 'Mouse heyzer', 'Travesseiro microfibra', 'Régua 30cm', 'Escova de dente', 'Cobertor', 'Geladeira frost free', 'Despertador', 'Arroz 1kg', 'Bolacha salgada', 'Feijão 1kg', 'Açucar 1kg', 'Achocolatado 500g']
-preco = [199.00, 899.00, 2.99, 2.99, 1.99, 15.50, 20, 1200, 300, 15.99, 5.90, 13.90, 89.90, 859.90, 49.90, 5.50, 2.99, 4.99, 12.99, 6.50]
+class info:
+    carrinho = []
+    carrinhoitem = []
+    cpfs = list()
+    usuarios = list()
+    produtos = ['Controle naointendo', 'Xaina Bluemi note 10', 'Refrigerante de cola', 'Chocolate branco', 'Chocolate preto', 'Xícara espelhada', 'Fita led', 'Televisão LB - life is bad', 'Mouse heyzer', 'Travesseiro microfibra', 'Régua 30cm', 'Escova de dente', 'Cobertor', 'Geladeira frost free', 'Despertador', 'Arroz 1kg', 'Bolacha salgada', 'Feijão 1kg', 'Açucar 1kg', 'Achocolatado 500g']
+    preco = [199.00, 899.00, 2.99, 2.99, 1.99, 15.50, 20, 1200, 300, 15.99, 5.90, 13.90, 89.90, 859.90, 49.90, 5.50, 2.99, 4.99, 12.99, 6.50]
+
 def cadastro():
     class dadosuser():
         email = input('Crie um email para o usuário \n')
@@ -62,19 +61,19 @@ def cadastro():
         else:
             return print('Dígito verificador está incorreto')
     #Verificando se os dados já estão cadastrados.
-    if dados.cpf in cpfs:
+    if dados.cpf in info.cpfs:
         return print('CPF ja está cadastrado')
-    elif dados.nome in usuarios:
+    elif dados.nome in info.usuarios:
         return print('Usuário ja está cadastrado')
     else:
-        cpfs.append(dados.cpf)
-        usuarios.append(dados.nome)
+        info.cpfs.append(dados.cpf)
+        info.usuarios.append(dados.nome)
         print('Usuário cadastrado com sucesso')
     return dadosuser
 def compras(email, cpf, limite):
     print('Olá, atualmente temos os seguintes produtos em estoque.')
-    for prod in range(len(produtos)): #For para mostrar todos os produtos na tela.
-        print(f'{prod}.{produtos[prod]}-R$ {preco[prod]}') 
+    for prod in range(len(info.produtos)): #For para mostrar todos os produtos na tela.
+        print(f'{prod}.{info.produtos[prod]}-R$ {info.preco[prod]}') 
     print('Para adicionar ao carrinho basta apenas digitar o número do item.')
     print('Caso queira para de comprar digite 0')
     print('Caso queira pagar seu carrinho e liberar mais limite digite 100')
@@ -89,18 +88,18 @@ def compras(email, cpf, limite):
             break
         comprando = comprando - 1 #diminuindo 1 da escolha do usuário para que se encaixe no range da lista.
         try: #Caso o produto exista.
-            produtos[comprando]
+            info.produtos[comprando]
         except: #Se o produto não existir.
             print('Produto não existe')
             break
-        if limite > preco[comprando]:
-            limite = limite - preco[comprando]
-            print(f'{produtos[comprando]} adicionado ao carrinho')
-            carrinho.append(produtos[comprando])
-            carrinhoitem.append(preco[comprando])
+        if limite > info.preco[comprando]:
+            limite = limite - info.preco[comprando]
+            print(f'{info.produtos[comprando]} adicionado ao carrinho')
+            info.carrinho.append(info.produtos[comprando])
+            info.carrinhoitem.append(info.preco[comprando])
         else:
             print('Limite indisponivel.')
-    return carrinho, carrinhoitem
+    return info.carrinho, info.carrinhoitem
 def mostrarCarrinho(carrinho, carrinhoitem):
     carrinhoTotal = 0
     for valoritem in range(len(carrinhoitem)):
@@ -123,7 +122,7 @@ def pagamento(carrinhoTotal, email, cpf):
         print(f'Um boleto no valor de {carrinhoTotal} foi gerado no CPF {cpf} e enviado para o email {email} e seu limite foi liberado')
 
 # !-=-=-=-=-=-=-=-=-=-=-=- Programa principal =-=-=-=-=-=-=-=-=-=-=-=-!
-
+execucao = 'sim'
 while execucao == 'sim':
     print('Seja muito bem vindo à minha loja HorizonCC, meu nome é Murilo e estou aqui para te ajudar.')
     print('1-Fazer o cadastro de um novo cliente.')
